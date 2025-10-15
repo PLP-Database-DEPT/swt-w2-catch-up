@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Note Taking App</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --bg: #f9f9f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --border: #e5e7eb;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-right: 0.5rem;
+    }
+
+    button:hover {
+      background-color: #4338ca;
+    }
+
+    #notes {
+      margin-top: 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .note {
+      background-color: var(--card);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+
+    .note h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    .note button {
+      background-color: #e5e7eb;
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .note button:hover {
+      background-color: #d1d5db;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 Note Taking App</h1>
+  <input id="note-title" placeholder="Note Title" />
+  <textarea id="note-content" rows="4" placeholder="Write your note here..."></textarea>
+  <button onclick="saveNote()">Save Note</button>
+
+  <div id="notes"></div>
+
+  <script>
+    let notes = [];
+
+    function saveNote() {
+      const title = document.getElementById('note-title').value;
+      const content = document.getElementById('note-content').value;
+      if (!title || !content) return alert("Please fill in both fields.");
+      const note = { id: Date.now(), title, content };
+      notes.push(note);
+      renderNotes();
+    }
+
+    function renderNotes() {
+      const container = document.getElementById('notes');
+      container.innerHTML = '';
+      notes.forEach(note => {
+        const div = document.createElement('div');
+        div.className = 'note';
+        div.innerHTML = `
+          <h3>${note.title}</h3>
+          <p>${note.content}</p>
+          <button onclick="editNote(${note.id})">Edit</button>
+          <button onclick="deleteNote(${note.id})">Delete</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function editNote(id) {
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+      document.getElementById('note-title').value = note.title;
+      document.getElementById('note-content').value = note.content;
+      deleteNote(id);
+    }
+
+    function deleteNote(id) {
+      notes = notes.filter(n => n.id !== id);
+      renderNotes();
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer style="
+    margin-top: 4rem;
+    padding: 1.5rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6b7280;
+    border-top: 1px solid #e5e7eb;
+  ">
+    🧪 Software Testing — Week 2 Assignment
+  </footer>
+</body>
+</html>
